@@ -22,12 +22,17 @@ do
     platform_split=(${platform//\// })
     GOOS=${platform_split[0]}
     GOARCH=${platform_split[1]}
-    output_name="./build/$GOOS-$GOARCH/${package_name}_$version"
+    output_folder="./build/$GOOS-$GOARCH"
+    output_name="${package_name}_$version"
     if [ $GOOS = "windows" ]; then
         output_name+='.exe'
-    fi  
+    fi
+    output_path="$output_folder/$output_name"
 
-    env GOOS=$GOOS GOARCH=$GOARCH go build -o $output_name main.go
+    env GOOS=$GOOS GOARCH=$GOARCH go build -o $output_path main.go
+    pushd $output_folder
+    zip "$GOOS-$GOARCH.zip" $output_name
+    popd
     if [ $? -ne 0 ]; then
         echo 'An error has occurred! Aborting the script execution...'
         exit 1
