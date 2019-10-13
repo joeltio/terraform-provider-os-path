@@ -22,6 +22,6 @@ path = ["a", ""]
 ```
 
 ## Installation
-This project is currently in alpha, minimal testing has been done. To install this plugin, download the binary for your OS from the [releases](/joeltio/terraform-provider-ospath/releases) move it to your [terraform plugin folder](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins).
+This project is currently in alpha, minimal testing has been done. To install this plugin, download the binary for your OS from the [releases](https://github.com/joeltio/terraform-provider-ospath/releases) move it to your [terraform plugin folder](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins).
 
 After moving the binary, remember to run `terraform init` in your project to initialize the plugin.
