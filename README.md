@@ -11,6 +11,26 @@ outputs "my_folder_path" {
 ```
 The output `my_folder_path` will return `src/my_folder` on Linux and macOS, but will return `src\my_folder` on Windows host systems.
 
+For "relative paths", use the path named value (see [References to Named Values](https://www.terraform.io/docs/configuration/expressions.html#references-to-named-values)) as part of the list:
+```terraform
+resource "ospath" "myfile" {
+  path = [path.module, "src", "myModuleFile.txt"]
+}
+```
+
+If you made the mistake of referencing a non-existent file with `ospath` using a file function (e.g. `file` or `filemd5`), use a ternary operator and `fileexists` with your file function:
+```terraform
+resource "ospath" "myfile" {
+  path = [path.module, "src", "myModuleFile.txt"]
+}
+
+resource "aws_s3_bucket_object" "my_s3_obj" {
+  # truncated...
+  etag = fileexists(ospath_join.app_s3_cfn.result) ? filemd5(ospath_join.app_s3_cfn.result) : ""
+}
+```
+This will allow terraform to evaluate the path lazily (see [#10878](https://github.com/hashicorp/terraform/issues/10878) and [`fileexists`](https://www.terraform.io/docs/configuration/functions/fileexists.html)).
+
 Under the hood, the path list is passed to [Go's path package's Join](https://golang.org/pkg/path/#Join). Hence (from the documentation's examples), here are some behaviors of `join` resource (assuming it is a Unix system):
 ```terraform
 path = ["a", "b", "c"]
@@ -18,6 +38,9 @@ path = ["a", "b", "c"]
 path = ["a/b", "c"]
 # => a/b/c
 path = ["a", ""]
+# => a
+# .s are ignored, use the path variable instead (e.g. path.cwd, path.module, path.root)
+path = [".", "a"]
 # => a
 ```
 
