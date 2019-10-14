@@ -9,8 +9,7 @@ import (
 func resourceJoin() *schema.Resource {
 	return &schema.Resource{
 		Create: createJoin,
-		Read:   readJoin,
-		Update: updateJoin,
+		Read:   schema.Noop,
 		Delete: schema.RemoveFromState,
 		Schema: map[string]*schema.Schema{
 			"path": &schema.Schema{
@@ -19,6 +18,7 @@ func resourceJoin() *schema.Resource {
 					Type: schema.TypeString,
 				},
 				Required: true,
+				ForceNew: true,
 			},
 			"result": &schema.Schema{
 				Type:     schema.TypeString,
@@ -43,16 +43,4 @@ func createJoin(d *schema.ResourceData, m interface{}) error {
 	d.Set("result", joinedPath)
 	d.SetId(joinedPath)
 	return nil
-}
-
-func readJoin(d *schema.ResourceData, m interface{}) error {
-	return nil
-}
-
-func updateJoin(d *schema.ResourceData, m interface{}) error {
-	pathArr := toStringSlice(d.Get("path").([]interface{}))
-	joinedPath := path.Join(pathArr...)
-	d.Set("result", joinedPath)
-	d.SetId(joinedPath)
-	return readJoin(d, m)
 }
