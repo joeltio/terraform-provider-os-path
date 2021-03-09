@@ -45,6 +45,14 @@ path = [".", "a"]
 ```
 
 ## Installation
-This project is currently in alpha, minimal testing has been done. To install this plugin, download the binary for your OS from the [releases](https://github.com/joeltio/terraform-provider-ospath/releases) move it to your [terraform plugin folder](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins).
-
-After moving the binary, remember to run `terraform init` in your project to initialize the plugin.
+This project is currently in alpha, minimal testing has been done. To use this plugin, add `joeltio/ospath` as one of your required providers in yuor terraform file:
+```
+terraform {
+  required_providers {
+    ospath = {
+      source = "joeltio/ospath"
+      version = "0.0.3-alpha"
+    }
+  }
+}
+```
